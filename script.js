@@ -1,12 +1,32 @@
 const API_KEY = ``
-let news = []
+let newsList = []
 
 const getLatestNews = async () => {
     const url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines`)
     const response = await fetch(url)
     const data = await response.json()
-    news = data.articles
-    console.log(news)
+    newsList = data.articles
+    render()
+    console.log("newsList: ", newsList)
+}
+
+const render = () => {
+    const newsHTML = newsList.map(item => `<div class="row news">
+        <div class="col-lg-4">
+        <img class="news-img-size" src="${item.urlToImage}"/>
+        </div>
+        <div class="col-lg-8">
+            <h2>${item.title}</h2>
+            <p>
+                ${item.description}
+            </p>
+            <div>
+                ${item.source.name} * ${item.publishedAt}
+            </div>
+        </div>
+        </div>`).join('')
+
+    document.getElementById("news-board").innerHTML = newsHTML
 }
 
 getLatestNews()
