@@ -1,37 +1,45 @@
 const API_KEY = ``
 let newsList = []
+let url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines`)
 const menus = document.querySelectorAll(".menus button")
 menus.forEach(menu => menu.addEventListener("click", (event) => getNewsByCategory(event)))
 
+const getNews = async () => {
+    try {
+        const response = await fetch(url)
+        const data = await response.json()
+        if(response.status === 200){
+            if(data.articles.length === 0)
+            {
+                throw new Error("No matches for your search")
+            }
+            newsList = data.articles
+            render()
+        }
+        else {
+            throw new Error(data.message)
+        }
+    }
+    catch (error) {
+        errorRender(error.message)
+    }
+}
+
 const getLatestNews = async () => {
-    const url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines`)
-    const response = await fetch(url)
-    const data = await response.json()
-    newsList = data.articles
-    render()
-    console.log("newsList: ", newsList)
+    url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines`)
+    getNews()
 }
 
 const getNewsByCategory = async (event) => {
     const category = event.target.textContent.toLowerCase()
-    console.log(category)
-    const url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines?category=${category}`)
-    const response = await fetch(url)
-    const data = await response.json()
-    newsList = data.articles
-    render()
-    console.log("Category newsList: ", newsList)
+    url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines?category=${category}`)
+    getNews()
 }
 
 const getNewsByKeyword = async () => {
     const keyword = document.getElementById("search-input").value
-    console.log(keyword)
-    const url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines?q=${keyword}`)
-    const response = await fetch(url)
-    const data = await response.json()
-    newsList = data.articles
-    render()
-    console.log("Category newsList: ", newsList)
+    url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines?q=${keyword}`)
+    getNews()
 }
 
 const render = () => {
@@ -50,7 +58,20 @@ const render = () => {
         </div>
         </div>`).join('')
 
-    document.getElementById("news-board").innerHTML = newsHTML
+    document.getElementById("news-board").innerHTML = newsHTML    
+}
+
+const errorRender = (errorMessage) => {
+
+    const errorHTML = `<div class="alert alert-danger d-flex align-items-center" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+    <div>
+        ${errorMessage}
+    </div>
+    </div>`
+
+    document.getElementById("news-board").innerHTML = errorHTML
+
 }
 
 getLatestNews()
