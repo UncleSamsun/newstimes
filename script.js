@@ -1,6 +1,6 @@
 const API_KEY = ``
 let newsList = []
-let url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines`)
+let url = new URL(`http://https://newstimes-mj.netlify.app/top-headlines`)
 const menus = document.querySelectorAll(".menus button")
 menus.forEach(menu => menu.addEventListener("click", (event) => getNewsByCategory(event)))
 
@@ -26,19 +26,19 @@ const getNews = async () => {
 }
 
 const getLatestNews = async () => {
-    url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines`)
+    url = new URL(`http://https://newstimes-mj.netlify.app/top-headlines`)
     getNews()
 }
 
 const getNewsByCategory = async (event) => {
     const category = event.target.textContent.toLowerCase()
-    url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines?category=${category}`)
+    url = new URL(`http://https://newstimes-mj.netlify.app/top-headlines?category=${category}`)
     getNews()
 }
 
 const getNewsByKeyword = async () => {
     const keyword = document.getElementById("search-input").value
-    url = new URL(`http://times-node-env.eba-appvq3ef.ap-northeast-2.elasticbeanstalk.com/top-headlines?q=${keyword}`)
+    url = new URL(`http://https://newstimes-mj.netlify.app/top-headlines?q=${keyword}`)
     getNews()
 }
 
