@@ -74,18 +74,22 @@ const getNewsByKeyword = async () => {
 //     else {
 //         return true
 //     }
-
 // }
+
+const imgError = (image) => {
+	image.onerror = null
+	image.src = "./images/no-image.jpg"
+}
 
 const render = () => {
     const newsHTML = newsList.map(item => `<div class="row news">
         <div class="col-lg-4">
-        <img class="news-img-size" src="${item.urlToImage}" onerror="this.src='images\no-image.jpg'"/>
+        <img class="news-img-size" src="${item.urlToImage}" onerror="imgError(this)"/>
         </div>
         <div class="col-lg-8">
             <h2>${item.title}</h2>
             <p>
-                ${item.description}
+                ${item.description == null || item.description == "" ? "No Description" : item.description}
             </p>
             <div>
                 ${item.source.name} * ${item.publishedAt}
