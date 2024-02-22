@@ -82,7 +82,7 @@ const imgError = (image) => {
 }
 
 const render = () => {
-    const newsHTML = newsList.map(item => `<div class="row news">
+    const newsHTML = newsList.map(item => `<div class="row news align-items-center">
         <div class="col-lg-4">
         <img class="news-img-size" src="${item.urlToImage}" onerror="imgError(this)"/>
         </div>
