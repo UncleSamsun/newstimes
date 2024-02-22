@@ -81,6 +81,35 @@ const imgError = (image) => {
 	image.src = "./images/no-image.jpg"
 }
 
+const descriptionCheck = (des) => {
+    if(des == null || des == "")
+    {
+        return "내용없음"
+    }
+    else 
+    {
+        if(des.length >= 200)
+        {
+            return des.substring(0, 200) + "..."
+        }
+        else
+        {
+            return des
+        }
+    }
+}
+
+const sourceCheck = (name) => {
+    if(name == null || name == "")
+    {
+        return "no source"
+    }
+    else
+    {
+        return name
+    }
+}
+
 const render = () => {
     const newsHTML = newsList.map(item => `<div class="row news align-items-center">
         <div class="col-lg-4">
@@ -89,10 +118,10 @@ const render = () => {
         <div class="col-lg-8">
             <h2>${item.title}</h2>
             <p>
-                ${item.description == null || item.description == "" ? "No Description" : item.description}
+                ${descriptionCheck(item.description)}
             </p>
             <div>
-                ${item.source.name} * ${item.publishedAt}
+                ${sourceCheck(item.source.name)} * ${moment(item.publishedAt).fromNow()}
             </div>
         </div>
         </div>`).join('')

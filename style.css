@@ -6,6 +6,10 @@
     border-bottom: 1px solid #ebebeb;
 }
 
+.search-div {
+    height: 38px;
+}
+
 .head-line svg {
     width: 430px;
 }
