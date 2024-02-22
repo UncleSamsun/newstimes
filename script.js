@@ -1,6 +1,11 @@
 const API_KEY = ``
 let newsList = []
 let url = new URL(`https://newstimes-mj.netlify.app/top-headlines`)
+let searchState = false
+
+const navMenus = document.querySelectorAll(".nav-menus button")
+navMenus.forEach(menu => menu.addEventListener("click", (event) => getNewsByCategory(event)))
+
 const menus = document.querySelectorAll(".menus button")
 menus.forEach(menu => menu.addEventListener("click", (event) => getNewsByCategory(event)))
 
@@ -25,6 +30,19 @@ const getNews = async () => {
     }
 }
 
+const searchToggle = () => {
+    searchState = !searchState
+
+    if(searchState == true)
+    {
+        document.getElementById('search-box').className = 'd-flex'
+    }
+    else
+    {
+        document.getElementById('search-box').className = 'search-none'
+    }
+}
+
 const getLatestNews = async () => {
     url = new URL(`https://newstimes-mj.netlify.app/top-headlines`)
     getNews()
@@ -42,10 +60,27 @@ const getNewsByKeyword = async () => {
     getNews()
 }
 
+// const validType = function(source) {
+//     const contentType = source?.headers?.get('Content-Type');
+//     console.log(contentType)
+// }
+
+// const imageCheck = (imgURL) => {
+//     let image = new Image()
+//     image.src = imgURL
+//     if(!image.complete || ((image.width + image.height) <= 0)){
+//         return false
+//     }
+//     else {
+//         return true
+//     }
+
+// }
+
 const render = () => {
     const newsHTML = newsList.map(item => `<div class="row news">
         <div class="col-lg-4">
-        <img class="news-img-size" src="${item.urlToImage}"/>
+        <img class="news-img-size" src="${item.urlToImage}" onerror="this.src='images\no-image.jpg'"/>
         </div>
         <div class="col-lg-8">
             <h2>${item.title}</h2>
