@@ -126,7 +126,8 @@ const render = () => {
         </div>
         </div>`).join('')
 
-    document.getElementById("news-board").innerHTML = newsHTML    
+    document.getElementById("news-board").innerHTML = newsHTML
+    window.scrollTo({left:0, top:0})
 }
 
 const errorRender = (errorMessage) => {
