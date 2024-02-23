@@ -10,8 +10,12 @@
     height: 38px;
 }
 
+.btn-outline-secondary {
+    border-color: #dee2e6;
+}
+
 .btn-outline-secondary:hover {
-    background-color: rgb(240, 240, 240);
+    background-color: white;
     color: black;
 }
 
