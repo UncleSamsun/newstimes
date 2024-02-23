@@ -10,6 +10,11 @@
     height: 38px;
 }
 
+.btn-outline-secondary:hover {
+    background-color: rgb(240, 240, 240);
+    color: black;
+}
+
 .head-line svg {
     width: 430px;
 }
@@ -28,6 +33,7 @@
 
 .form-control:focus {
     box-shadow: none;
+    border-color: black;
 }
 
 .search-none {
