@@ -115,7 +115,7 @@ const sourceCheck = (name) => {
 
 const render = () => {
     const newsHTML = newsList.map(item => `<div class="row news">
-        <div class="col-lg-4 align-items-center rounded">
+        <div class="col-lg-4 align-items-center">
         <img class="news-img-size" src="${item.urlToImage}" onerror="imgError(this)"/>
         </div>
         <div class="col-lg-8 d-flex flex-column">
@@ -169,9 +169,7 @@ const paginationRender = () => {
 
     if(page !== 1)
     {
-        paginationHTML += `<a class="page-link" onclick="moveToPage(${1})">
-                            <span aria-hidden="true"><<</span>
-                           </a>`
+        paginationHTML += `<li class="page-item" onclick="moveToPage(${1})"><a class="page-link"><<</a></li>`
         paginationHTML += `<li class="page-item" onclick="moveToPage(${page - 1})"><a class="page-link"><</a></li>`        
     }
 
@@ -182,9 +180,7 @@ const paginationRender = () => {
     if(page !== totalPages)
     {
         paginationHTML += `<li class="page-item" onclick="moveToPage(${page + 1})"><a class="page-link">></a></li>`
-        paginationHTML += `<a class="page-link" onclick="moveToPage(${totalPages})">
-                            <span aria-hidden="true">>></span>
-                           </a>`
+        paginationHTML += `<li class="page-item" onclick="moveToPage(${totalPages})"><a class="page-link">>></a></li>`
     }
 
     document.querySelector(".pagination").innerHTML = paginationHTML
