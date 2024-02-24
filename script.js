@@ -28,6 +28,7 @@ const getNews = async () => {
             }
             newsList = data.articles
             totalResults = data.totalResults
+            // totalResults = 124
             render()
         }
         else {
@@ -57,7 +58,14 @@ const getLatestNews = async () => {
     getNews()
 }
 
+const resetCategoryClass = () => {
+    navMenus.forEach(btn => {btn.className = ''})
+    menus.forEach(btn => {btn.className = ''})
+}
+
 const getNewsByCategory = async (event) => {
+    resetCategoryClass()
+    event.target.className = "select-button"
     const category = event.target.textContent.toLowerCase()
     page = 1
     url = new URL(`https://newstimes-mj.netlify.app/top-headlines?category=${category}`)
@@ -107,7 +115,7 @@ const sourceCheck = (name) => {
 
 const render = () => {
     const newsHTML = newsList.map(item => `<div class="row news">
-        <div class="col-lg-4 align-items-center">
+        <div class="col-lg-4 align-items-center rounded">
         <img class="news-img-size" src="${item.urlToImage}" onerror="imgError(this)"/>
         </div>
         <div class="col-lg-8 d-flex flex-column">
@@ -139,7 +147,7 @@ const errorRender = (errorMessage) => {
     </div>`
 
     document.getElementById("news-board").innerHTML = errorHTML
-
+    document.querySelector(".pagination").innerHTML = ''
 }
 
 const paginationRender = () => {
@@ -150,6 +158,10 @@ const paginationRender = () => {
     if(lastPage > totalPages)
     {
         lastPage = totalPages
+    }
+    else if((totalPages % groupSize) !== 0)
+    {
+
     }
 
     let firstPage = (lastPage - (groupSize - 1) <= 0? 1: lastPage - (groupSize - 1))
@@ -176,24 +188,6 @@ const paginationRender = () => {
     }
 
     document.querySelector(".pagination").innerHTML = paginationHTML
-
-    // <nav aria-label="Page navigation example">
-    // <ul class="pagination">
-    //     <li class="page-item">
-    //         <a class="page-link" href="#" aria-label="Previous">
-    //             <span aria-hidden="true">&laquo;</span>
-    //         </a>
-    //         </li>
-    //         <li class="page-item"><a class="page-link" href="#">1</a></li>
-    //         <li class="page-item"><a class="page-link" href="#">2</a></li>
-    //         <li class="page-item"><a class="page-link" href="#">3</a></li>
-    //         <li class="page-item">
-    //         <a class="page-link" href="#" aria-label="Next">
-    //             <span aria-hidden="true">&raquo;</span>
-    //         </a>
-    //         </li>
-    //     </ul>
-    // </nav>
 }
 
 const moveToPage = (pageNum) => {
