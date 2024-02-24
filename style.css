@@ -103,6 +103,14 @@ body {
     padding: 4px;
 }
 
+/* .news-title {
+    flex-direction: column;
+}
+
+.news-source {
+    flex-direction: column;
+} */
+
 .error-notice {
     height: 70px;
     display: flex;

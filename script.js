@@ -2,6 +2,11 @@ const API_KEY = ``
 let newsList = []
 let url = new URL(`https://newstimes-mj.netlify.app/top-headlines`)
 let searchState = false
+let totalResults = 0
+let page = 1
+const pageSize = 10
+const groupSize = 5
+
 
 const navMenus = document.querySelectorAll(".nav-menus button")
 navMenus.forEach(menu => menu.addEventListener("click", (event) => getNewsByCategory(event)))
@@ -11,6 +16,9 @@ menus.forEach(menu => menu.addEventListener("click", (event) => getNewsByCategor
 
 const getNews = async () => {
     try {
+        url.searchParams.set("page", page)
+        url.searchParams.set("pageSize", pageSize)
+
         const response = await fetch(url)
         const data = await response.json()
         if(response.status === 200){
@@ -19,6 +27,7 @@ const getNews = async () => {
                 throw new Error("No matches for your search")
             }
             newsList = data.articles
+            totalResults = data.totalResults
             render()
         }
         else {
@@ -50,31 +59,17 @@ const getLatestNews = async () => {
 
 const getNewsByCategory = async (event) => {
     const category = event.target.textContent.toLowerCase()
+    page = 1
     url = new URL(`https://newstimes-mj.netlify.app/top-headlines?category=${category}`)
     getNews()
 }
 
 const getNewsByKeyword = async () => {
     const keyword = document.getElementById("search-input").value
+    page = 1
     url = new URL(`https://newstimes-mj.netlify.app/top-headlines?q=${keyword}`)
     getNews()
 }
-
-// const validType = function(source) {
-//     const contentType = source?.headers?.get('Content-Type');
-//     console.log(contentType)
-// }
-
-// const imageCheck = (imgURL) => {
-//     let image = new Image()
-//     image.src = imgURL
-//     if(!image.complete || ((image.width + image.height) <= 0)){
-//         return false
-//     }
-//     else {
-//         return true
-//     }
-// }
 
 const imgError = (image) => {
 	image.onerror = null
@@ -111,15 +106,17 @@ const sourceCheck = (name) => {
 }
 
 const render = () => {
-    const newsHTML = newsList.map(item => `<div class="row news align-items-center">
-        <div class="col-lg-4">
+    const newsHTML = newsList.map(item => `<div class="row news">
+        <div class="col-lg-4 align-items-center">
         <img class="news-img-size" src="${item.urlToImage}" onerror="imgError(this)"/>
         </div>
-        <div class="col-lg-8">
-            <h2>${item.title}</h2>
-            <p>
-                ${descriptionCheck(item.description)}
-            </p>
+        <div class="col-lg-8 d-flex flex-column">
+            <div class="mb-auto">
+                <h3>${item.title}</h3>
+                <p>
+                    ${descriptionCheck(item.description)}
+                </p>
+            </div>
             <div>
                 ${sourceCheck(item.source.name)} * ${moment(item.publishedAt).fromNow()}
             </div>
@@ -127,6 +124,8 @@ const render = () => {
         </div>`).join('')
 
     document.getElementById("news-board").innerHTML = newsHTML
+    paginationRender()
+
     window.scrollTo({left:0, top:0})
 }
 
@@ -141,6 +140,66 @@ const errorRender = (errorMessage) => {
 
     document.getElementById("news-board").innerHTML = errorHTML
 
+}
+
+const paginationRender = () => {
+    const totalPages = Math.ceil(totalResults / pageSize)
+    const pageGroup = Math.ceil(page / groupSize)
+    let lastPage = pageGroup * groupSize
+
+    if(lastPage > totalPages)
+    {
+        lastPage = totalPages
+    }
+
+    let firstPage = (lastPage - (groupSize - 1) <= 0? 1: lastPage - (groupSize - 1))
+    let paginationHTML = ``
+
+    if(page !== 1)
+    {
+        paginationHTML += `<a class="page-link" onclick="moveToPage(${1})">
+                            <span aria-hidden="true"><<</span>
+                           </a>`
+        paginationHTML += `<li class="page-item" onclick="moveToPage(${page - 1})"><a class="page-link"><</a></li>`        
+    }
+
+    for(let i = firstPage; i <= lastPage; i++){
+        paginationHTML += `<li class="page-item ${i===page ? "active" : ""}" onclick="moveToPage(${i})"><a class="page-link">${i}</a></li>`
+    }
+
+    if(page !== totalPages)
+    {
+        paginationHTML += `<li class="page-item" onclick="moveToPage(${page + 1})"><a class="page-link">></a></li>`
+        paginationHTML += `<a class="page-link" onclick="moveToPage(${totalPages})">
+                            <span aria-hidden="true">>></span>
+                           </a>`
+    }
+
+    document.querySelector(".pagination").innerHTML = paginationHTML
+
+    // <nav aria-label="Page navigation example">
+    // <ul class="pagination">
+    //     <li class="page-item">
+    //         <a class="page-link" href="#" aria-label="Previous">
+    //             <span aria-hidden="true">&laquo;</span>
+    //         </a>
+    //         </li>
+    //         <li class="page-item"><a class="page-link" href="#">1</a></li>
+    //         <li class="page-item"><a class="page-link" href="#">2</a></li>
+    //         <li class="page-item"><a class="page-link" href="#">3</a></li>
+    //         <li class="page-item">
+    //         <a class="page-link" href="#" aria-label="Next">
+    //             <span aria-hidden="true">&raquo;</span>
+    //         </a>
+    //         </li>
+    //     </ul>
+    // </nav>
+}
+
+const moveToPage = (pageNum) => {
+    page = pageNum
+    
+    getNews()
 }
 
 getLatestNews()
